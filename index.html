@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Journey</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef, #ffecd2);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Floating hearts background */
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff6b9d;
+            font-size: 24px;
+            animation: float 6s linear infinite;
+        }
+
+        .heart:nth-child(odd) { animation-delay: -2s; }
+        .heart:nth-child(even) { animation-delay: -4s; }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            text-align: center;
+            max-width: 400px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .bear {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            background: url('https://media.giphy.com/media/3o7TKz9bX9v8Z8Z8Z8/giphy.gif') no-repeat center;
+            background-size: cover;
+            border-radius: 50%;
+        }
+
+        h1, p {
+            margin: 10px 0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .yes-btn {
+            background: #ff6b9d;
+            color: white;
+        }
+
+        .yes-btn:hover {
+            background: #e55a8b;
+            transform: scale(1.05);
+        }
+
+        .no-btn {
+            background: #ccc;
+            color: #333;
+            position: relative;
+        }
+
+        .no-btn:hover {
+            background: #bbb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                max-width: 90%;
+                padding: 15px;
+            }
+
+            .bear {
+                width: 120px;
+                height: 120px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts">
+        <!-- Generate floating hearts dynamically -->
+    </div>
+
+    <div class="container" id="step1">
+        <div class="bear"></div>
+        <h1>Hey there! 🐻</h1>
+        <p>I've been thinking about you a lot. Will you go on a little journey with me?</p>
+        <div class="buttons">
+            <button class="yes-btn" onclick="nextStep(2)">Yes! 💕</button>
+            <button class="no-btn" id="noBtn1" onmouseover="moveNoBtn('noBtn1')">No 😏</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="step2">
+        <div class="bear"></div>
+        <h1>Step 2: Getting Closer! 🐻❣️</h1>
+        <p>You make my heart flutter like these floating hearts. Ready for more?</p>
+        <div class="buttons">
+            <button class="yes-btn" onclick="nextStep(3)">Absolutely! 🎉</button>
+            <button class="no-btn" id="noBtn2" onmouseover="moveNoBtn('noBtn2')">Nope 😜</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="step3">
+        <div class="bear"></div>
+        <h1>Final Step: My Heart is Yours! 🐻💌</h1>
+        <p>Will you be my special someone? Let's celebrate!</p>
+        <div class="buttons">
+            <button class="yes-btn" onclick="celebrate()">Yes, forever! 💖</button>
+            <button class="no-btn" id="noBtn3" onmouseover="moveNoBtn('noBtn3')">Still no? 😈</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        // Generate floating hearts
+        function createHearts() {
+            const heartsContainer = document.querySelector('.hearts');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        createHearts();
+
+        // Move "No" button on hover
+        function moveNoBtn(btnId) {
+            const btn = document.getElementById(btnId);
+            const container = btn.parentElement.parentElement;
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+
+            let newLeft = Math.random() * (containerRect.width - btnRect.width);
+            let newTop = Math.random() * (containerRect.height - btnRect.height - 100) + 50; // Avoid top area
+
+            btn.style.position = 'absolute';
+            btn.style.left = newLeft + 'px';
+            btn.style.top = newTop + 'px';
+        }
+
+        // Transition to next step
+        function nextStep(step) {
+            const current = document.getElementById('step' + (step - 1));
+            const next = document.getElementById('step' + step);
+
+            current.classList.add('hidden');
+            next.classList.remove('hidden');
+            next.classList.add('fade-in');
+
+            // Trigger confetti on "Yes"
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // Final celebration and WhatsApp
+        function celebrate() {
+            confetti({
+                particleCount: 200,
+                spread: 160,
+                origin: { y: 0.6 }
+            });
+
+            // Pre-filled WhatsApp message (replace with actual phone number)
+            const message = encodeURIComponent("Hey! I just said yes to your romantic journey! 💕🐻");
+            const phone = "1234567890"; // Replace with recipient's phone number
+            const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
+
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 2000); // Delay to let confetti finish
+        }
+    </script>
+</body>
+</html>
